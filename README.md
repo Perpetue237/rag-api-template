@@ -8,7 +8,8 @@ This repository propose a template to set up and build a RAG-API with docker
 |-- README.md
 |-- backend
 |   |-- Dockerfile
-|   `-- app
+|   |-- app
+|   |-- requirements.txt
 |-- docker-compose.yml
 |-- frontend
 |   |-- Dockerfile
@@ -25,6 +26,7 @@ This repository propose a template to set up and build a RAG-API with docker
 |   `-- vite.config.ts
 |-- models_loader.ipynb
 `-- nginx
+    `-- nginx.conf
 ```
 
 ## Dependencies
