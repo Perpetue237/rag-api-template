@@ -2,6 +2,7 @@
 This repository propose a template to set up and build a RAG-API with docker
 
 
+```plaintext
 |-- LICENSE
 |-- README.md
 |-- backend
@@ -23,3 +24,4 @@ This repository propose a template to set up and build a RAG-API with docker
 |   `-- vite.config.ts
 |-- models_loader.ipynb
 `-- nginx
+
