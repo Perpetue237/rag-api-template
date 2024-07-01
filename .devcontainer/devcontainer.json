@@ -32,10 +32,10 @@
 		"--env-file=.env",
 		"--gpus", "all"
     ],
-	/*"mounts": [
-		"source=/models/models,target=/app/models,type=bind,consistency=cached",
-		"source=/models/tokenizers,target=/app/tokenizers,type=bind,consistency=cached",
-		"source=/rag-uploads,target=/app/rag-uploads,type=bind,consistency=cached" 
-	],*/
-	"postStartCommand": "npm install"
+	"mounts": [
+		"source=/home/perpetue/rag-template/models/models,target=/app/models,type=bind,consistency=cached",
+		"source=/home/perpetue/rag-template/models/tokenizers,target=/app/tokenizers,type=bind,consistency=cached",
+		"source=/home/perpetue/rag-template/rag-uploads,target=/app/rag-uploads,type=bind,consistency=cached" 
+	],
+	"postStartCommand": "cd frontend && npm install"
 }
