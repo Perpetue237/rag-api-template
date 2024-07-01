@@ -1,11 +1,8 @@
 import os, json, requests
 import dotenv, asyncio
 from transformers import RagTokenizer, RagRetriever, RagTokenForGeneration
-
-# Initialize the environment
-tokenizer = RagTokenizer.from_pretrained("facebook/rag-token-base")
-retriever = RagRetriever.from_pretrained("facebook/rag-token-base", index_name="exact")
-generator = RagTokenForGeneration.from_pretrained("facebook/rag-token-base", retriever=retriever)
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 
 from fastapi import FastAPI, HTTPException, Query, UploadFile, File
 from pydantic import BaseModel
@@ -16,10 +13,20 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
 
+
 app = FastAPI()
 app.file_path = None
 app.UPLOAD_DIRECTORY = "/app/rag-uploads"
 
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 if not os.path.exists(app.UPLOAD_DIRECTORY):
     os.makedirs(app.UPLOAD_DIRECTORY)

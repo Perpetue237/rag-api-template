@@ -11,7 +11,9 @@ services:
     ports:
       - "80:80"
     networks:
-      - app-network
+      - app-network  
+    restart: always
+
 
   backend:
     build:
@@ -56,6 +58,8 @@ services:
       - backend
     networks:
       - app-network
+    restart: always
+
 
 networks:
   app-network:
