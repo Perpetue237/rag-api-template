@@ -62,12 +62,14 @@ This repository proposes a template to set up and build a GPU-accelerated RAG-AP
     ```sh
     cd rag-api-template
     ```
-3. Install dependencies:
+3. Sart the API:
     ```sh
     docker compose down
     docker volume prune
     docker-compose up --build -d
     ```
+4. Visit the API
+    http://localhost/
     
 ## Contributing
 
@@ -85,5 +87,5 @@ Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
 ## Contact
 
-[Perpetue237](https://www.linkedin.com/in/perpetue-k-375306185)
+[Perpetue Kuete Tiayo](https://www.linkedin.com/in/perpetue-k-375306185)
 
