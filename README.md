@@ -1,5 +1,5 @@
 # rag-api-template
-This repository propose a template to set up and build a RAG-API with docker
+This repository proposes a template to set up and build a GPU-accelerated RAG-API with Docker Compose.
 
 ## Project Structure
 
