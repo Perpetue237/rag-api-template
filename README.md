@@ -29,15 +29,27 @@ This repository propose a template to set up and build a RAG-API with docker
     `-- nginx.conf
 ```
 
-## Dependencies
+## Dependencies (tested on UBUNTU 22.04) 
 
-- Docker
+- NVIDIA drivers
+
+- Docker:
+    ```sh
+        sudo bash install-docker.sh
+    ```
+
+- NVIDIA Container Toolkit:
+    ```sh
+        sudo bash install-nvidia-container-toolkit.sh
+    ```
 
 ## Requirements
 
 - Operating System: Windows, macOS, Linux
-- Minimum Disk Space: 500MB
+- Minimum Disk Space: 10GB
 - Minimum Memory: 4GB RAM
+- GPU Characteristics: NVIDIA RTX A2000 GPU with 4096MiB total memory
+
 
 
 ## Installation
