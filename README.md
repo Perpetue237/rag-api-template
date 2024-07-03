@@ -48,13 +48,13 @@ This repository propose a template to set up and build a RAG-API with docker
     ```
 2. Navigate to the project directory:
     ```sh
-    cd rag-api-templat
+    cd rag-api-template
     ```
 3. Install dependencies:
     ```sh
     docker compose down
-    docker compose build  --no-cache
-    docker compose up -d
+    docker volume prune
+    docker-compose up --build -d
     ```
     
 ## Contributing
@@ -73,5 +73,5 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Contact
 
-Your Name - [Perpetue237](https://www.linkedin.com/in/perpetue-k-375306185)
+[Perpetue237](https://www.linkedin.com/in/perpetue-k-375306185)
 

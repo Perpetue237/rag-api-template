@@ -26,3 +26,4 @@ jq
 sse-starlette
 python-multipart
 pymongo
+
