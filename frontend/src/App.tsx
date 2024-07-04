@@ -1,11 +1,11 @@
-import { useState, ChangeEvent, FormEvent } from 'react';
+import { useState, ChangeEvent } from 'react';
 import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
 import './App.css';
 
 function App() {
   const [file, setFile] = useState<File | null>(null);
-  const [question, setQuestion] = useState('');
+  const [inputQuestion, setInputQuestion] = useState('');
   const [filePath, setFilePath] = useState<string>('');
   const [displayedQuestion, setDisplayedQuestion] = useState<string>('');
   const [context, setContext] = useState<string[]>([]);
@@ -13,39 +13,35 @@ function App() {
   const [expandedContextIndex, setExpandedContextIndex] = useState<number | null>(null);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setQuestion(e.target.value);
+    setInputQuestion(e.target.value);
   };
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      setFile(e.target.files[0]);
-    }
-  };
+      const selectedFile = e.target.files[0];
+      setFile(selectedFile);
+      console.log(file)
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    if (!file) {
-      alert("Please select a file to upload.");
-      return;
-    }
-    const formData = new FormData();
-    formData.append('file', file);
+      // Directly handle the file upload
+      const formData = new FormData();
+      formData.append('file', selectedFile);
 
-    try {
-      const uploadResponse = await fetch('http://localhost:8000/upload', {
-        method: 'POST',
-        body: formData,
-      });
+      try {
+        const uploadResponse = await fetch('http://localhost:8000/upload', {
+          method: 'POST',
+          body: formData,
+        });
 
-      if (uploadResponse.ok) {
-        const uploadData = await uploadResponse.json();
-        console.log('File uploaded successfully:', uploadData);
-        setFilePath(uploadData.filePath);
-      } else {
-        console.error('Failed to upload file:', uploadResponse.statusText);
+        if (uploadResponse.ok) {
+          const uploadData = await uploadResponse.json();
+          console.log('File uploaded successfully:', uploadData);
+          setFilePath(uploadData.filePath);
+        } else {
+          console.error('Failed to upload file:', uploadResponse.statusText);
+        }
+      } catch (error) {
+        console.error('Error uploading file:', error);
       }
-    } catch (error) {
-      console.error('Error uploading file:', error);
     }
   };
 
@@ -54,17 +50,18 @@ function App() {
       alert("Please upload a file first.");
       return;
     }
-    if (!question) {
+    if (!inputQuestion) {
       alert("Please enter a question.");
       return;
     }
 
     try {
-      setDisplayedQuestion(question);
+      setDisplayedQuestion(inputQuestion);
       setContext([]);
       setAnswer('');
+      setInputQuestion('');
 
-      const retrieveResponse = await fetch(`http://localhost:8000/retrieve_from_path?file_path=${encodeURIComponent(filePath)}&question=${encodeURIComponent(question)}`);
+      const retrieveResponse = await fetch(`http://localhost:8000/retrieve_from_path?file_path=${encodeURIComponent(filePath)}&question=${encodeURIComponent(inputQuestion)}`);
 
       if (retrieveResponse.ok) {
         const reader = retrieveResponse.body?.getReader();
@@ -94,6 +91,9 @@ function App() {
       } else {
         console.error('Failed to retrieve:', retrieveResponse.statusText);
       }
+
+      // Clear the question input field after submission
+      setInputQuestion('');
     } catch (error) {
       console.error('Error retrieving answer:', error);
     }
@@ -115,10 +115,7 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <form onSubmit={handleSubmit}>
-          <input type="file" onChange={handleFileChange} />
-          <button type="submit">Upload File</button>
-        </form>
+        <input type="file" onChange={handleFileChange} />
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
@@ -159,7 +156,7 @@ function App() {
         <input
           type="text"
           placeholder="Enter your question"
-          value={question}
+          value={inputQuestion}
           onChange={handleInputChange}
         />
         <button onClick={handleQuestionSubmit}>Send</button>

@@ -108,7 +108,7 @@ h1 {
 .context-item {
   display: inline-flex;
   align-items: center; /* Align text vertically */
-  padding: 0.25rem 0.5rem; /* Reduced padding */
+  padding: 0.15rem 0.5rem; /* Reduced padding */
   border: 1px solid #ccc;
   border-radius: 4px;
   background-color: #f9f9f9;
