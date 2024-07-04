@@ -165,6 +165,11 @@ function App() {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
+      <footer className="footer">
+        <p>&copy; {new Date().getFullYear()} <a href="https://www.linkedin.com/in/perpetue-k-375306185" target="_blank">
+          Perpetue Kuete Tiayo
+        </a>. All Rights Reserved.</p>
+      </footer>
     </div>
   );
 }
