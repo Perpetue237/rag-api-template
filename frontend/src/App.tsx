@@ -10,6 +10,7 @@ function App() {
   const [displayedQuestion, setDisplayedQuestion] = useState<string>('');
   const [context, setContext] = useState<string[]>([]);
   const [answer, setAnswer] = useState<string>('');
+  const [expandedContextIndex, setExpandedContextIndex] = useState<number | null>(null);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setQuestion(e.target.value);
@@ -80,7 +81,7 @@ function App() {
             try {
               const data = JSON.parse(line);
               if (data.context) {
-                setContext(prev => [...prev, ...data.context]);
+                setContext(data.context);
               }
               if (data.answer) {
                 setAnswer(prev => prev + ' ' + data.answer);
@@ -90,8 +91,6 @@ function App() {
             }
           });
         }
-
-        console.log('Retrieve response:', result);
       } else {
         console.error('Failed to retrieve:', retrieveResponse.statusText);
       }
@@ -100,9 +99,13 @@ function App() {
     }
   };
 
+  const toggleContext = (index: number) => {
+    setExpandedContextIndex(expandedContextIndex === index ? null : index);
+  };
+
   return (
-    <>
-      <div>
+    <div className="container">
+      <div className="header">
         <a href="https://vitejs.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>
@@ -120,27 +123,39 @@ function App() {
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
       </div>
-      {displayedQuestion && (
-        <div className="displayed-question">
-          <h2>Question:</h2>
-          <p>{displayedQuestion}</p>
-        </div>
-      )}
-      {context.length > 0 && (
-        <div className="context-box">
-          <h2>Context:</h2>
-          {context.map((text, index) => (
-            <p key={index}>{text}</p>
-          ))}
-        </div>
-      )}
-      {answer && (
-        <div className="answer-box">
-          <h2>Answer:</h2>
-          <p>{answer}</p>
-        </div>
-      )}
       <div className="question-form">
+        {displayedQuestion && (
+          <div className="displayed-question">
+            <h2>Question:</h2>
+            <p>{displayedQuestion}</p>
+          </div>
+        )}
+        {context.length > 0 && (
+          <div className="context-box">
+            <div className="context-numbers">
+              {context.map((_, index) => (
+                <div
+                  key={index}
+                  className={`context-item ${expandedContextIndex === index ? 'expanded' : ''}`}
+                  onClick={() => toggleContext(index)}
+                >
+                  <p><strong>Context {index + 1}</strong></p>
+                </div>
+              ))}
+            </div>
+            {expandedContextIndex !== null && (
+              <div className="context-content">
+                <p>{context[expandedContextIndex]}</p>
+              </div>
+            )}
+          </div>
+        )}
+        {answer && (
+          <div className="answer-box">
+            <h2>Answer:</h2>
+            <p>{answer}</p>
+          </div>
+        )}
         <input
           type="text"
           placeholder="Enter your question"
@@ -149,11 +164,11 @@ function App() {
         />
         <button onClick={handleQuestionSubmit}>Send</button>
       </div>
-      
+
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
-    </>
+    </div>
   );
 }
 

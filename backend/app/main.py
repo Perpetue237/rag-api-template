@@ -1,32 +1,30 @@
+import torch, gc
+gc.collect()
+torch.cuda.empty_cache()
+
 # Import necessary modules
 import os, json, requests
 import dotenv, asyncio
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig, pipeline, GenerationConfig
-
 import torch
-
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
-
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.vectorstores import FAISS, VectorStore
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain.schema.runnable import RunnablePassthrough
-from langchain_core.runnables import RunnableParallel
+from langchain_core.runnables import RunnableParallel, RunnablePick
 from langchain.prompts import ChatPromptTemplate
 from langchain.schema.output_parser import StrOutputParser
 from langchain_community.llms import HuggingFacePipeline
-
 from fastapi import FastAPI, HTTPException, Query, UploadFile, File
 from pydantic import BaseModel
-
 from typing import AsyncGenerator
-
 import logging
 
 # Set up logging
-logging.basicConfig(level = logging.INFO)
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
@@ -59,7 +57,7 @@ if not os.path.exists(app.UPLOAD_DIRECTORY):
 class QueryRequest(BaseModel):
     query: str
     context: str = None
-    
+
 # Function to format documents
 def format_docs(docs):
     return " ".join([doc.page_content.replace('\n', ' ') for doc in docs])
@@ -98,7 +96,7 @@ pipe = pipeline(
     "text-generation", 
     model=model,
     tokenizer=tokenizer,
-    max_new_tokens=1000
+    max_new_tokens=128
 )
 
 # Set up HuggingFace pipeline
@@ -127,7 +125,7 @@ async def retrieve_from_path(file_path: str = Query(...), question: str = Query(
         documents = loader.load()
         
         # Split documents into chunks
-        text_splitter = CharacterTextSplitter(chunk_size=500, chunk_overlap=50)
+        text_splitter = CharacterTextSplitter(chunk_size=500, chunk_overlap=0)
         chunks = text_splitter.split_documents(documents)
         
         # Create a FAISS vector store from the document chunks
@@ -136,12 +134,12 @@ async def retrieve_from_path(file_path: str = Query(...), question: str = Query(
 
         # Define prompt template
         prompt = ChatPromptTemplate.from_template(
-            template="Given the context: {context}, and the question: {question}, provide a detailed answer."
+            template="Given the context: {context}, and the question: {question}, provide a short answer."
         )
         
         # Define RAG chain from documents
         rag_chain_from_docs = (
-            RunnablePassthrough.assign(context=(lambda x: format_docs(x["context"])))
+            RunnablePassthrough.assign(context=RunnablePick("context") | format_docs)
             | prompt
             | hf_pipe
             | StrOutputParser()

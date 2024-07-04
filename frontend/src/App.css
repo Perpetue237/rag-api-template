@@ -1,108 +1,152 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
+/* App.css */
 
 body {
+  font-family: Arial, sans-serif;
   margin: 0;
+  padding: 0;
   display: flex;
   justify-content: center;
-  align-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-  background-color: var(--background-color);
+}
+
+.container {
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1rem;
 }
 
 h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+  font-size: 2rem;
+  margin: 1rem 0;
 }
 
-button {
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f5f5f5;
+  padding: 1rem;
   border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.card input[type="file"] {
+  margin-bottom: 1rem;
+}
+
+.card button {
+  padding: 0.5rem 1rem;
+  background-color: #007acc;
+  color: white;
+  border: none;
+  border-radius: 4px;
   cursor: pointer;
-  transition: border-color 0.25s;
 }
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+
+.card button:hover {
+  background-color: #005fa3;
 }
 
 .question-form {
-  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 2rem 0;
 }
 
-.question-form input {
-  padding: 10px;
-  margin-right: 10px;
+.question-form input[type="text"] {
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  width: 300px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  font-size: 1em;
 }
 
 .question-form button {
-  padding: 10px 20px;
-  border: 1px solid transparent;
-  border-radius: 4px;
-  background-color: #007bff;
+  padding: 0.5rem 1rem;
+  background-color: #007acc;
   color: white;
+  border: none;
+  border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.25s;
 }
 
 .question-form button:hover {
-  background-color: #0056b3;
+  background-color: #005fa3;
 }
 
-.context-box, .answer-box {
-  max-height: 300px;
-  overflow-y: scroll;
+.displayed-question,
+.context-box,
+.answer-box {
+  margin: 1rem 0;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  width: 100%;
+  word-wrap: break-word;
+  max-height: 150px; 
+  overflow-y: auto;
+}
+
+.context-box {
+  margin-top: 1rem;
+}
+
+.context-numbers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem; /* Reduced gap between context items */
+}
+
+.context-item {
+  display: inline-flex;
+  align-items: center; /* Align text vertically */
+  padding: 0.25rem 0.5rem; /* Reduced padding */
   border: 1px solid #ccc;
-  padding: 10px;
-  margin-top: 10px;
-}
-.context-box p, .answer-box p {
-  margin: 0;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  font-size: 0.875rem; /* Adjust font size if necessary */
 }
 
+.context-item.expanded {
+  background-color: #e0e0e0;
+  border-color: #007bff;
+}
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.context-content {
+  margin-top: 0.5rem; /* Reduced margin top */
+  padding: 0.75rem; /* Adjusted padding */
+  border: 1px solid #007bff;
+  border-radius: 4px;
+  background-color: #e0e0e0;
+}
+
+.answer-box {
+  background-color: #ffe; 
+}
+
+.bg-lightblue {
+  background-color: #add8e6;
+}
+
+.bg-lightgray {
+  background-color: #d3d3d3;
+}
+
+.border-lightgray {
+  border-color: #d3d3d3;
+}
+
+.logo {
+  width: 100px;
+  height: 100px;
+  margin: 1rem;
 }
