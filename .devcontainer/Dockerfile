@@ -10,6 +10,7 @@ RUN apt-get -y update
 RUN apt-get -y install git curl
 RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash -
 RUN apt-get install -y nodejs
+RUN apt-get install -y tree
 
 
 COPY . .
