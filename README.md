@@ -64,21 +64,19 @@ This repository proposes a template to set up and build a GPU-accelerated RAG-AP
     After cloning the repository, follow these steps to set up the project:
 
     ### 1. Create Directories
+    Create directories to store the models, tokenizers, and data. You can create these directories anywhere on your file system. Here is an example of how to create them in the project's root directory:
 
-        Create directories to store the models, tokenizers, and data. You can create these directories anywhere on your file system. Here is an example of how to create them in the project's root directory:
-
-        ```sh
-        mkdir -p ~/rag-template/models/models
-        mkdir -p ~/rag-template/models/tokenizers
-        mkdir -p ~/rag-template/rag-uploads
-        ```
+    ```sh
+    mkdir -p ~/rag-template/models/models
+    mkdir -p ~/rag-template/models/tokenizers
+    mkdir -p ~/rag-template/rag-uploads
+    ```
 
     ### 2. Update `docker-compose.yml`
+    Modify the [docker-compose.yml](`docker-compose.yml`) file to mount these directories:
 
-        Modify the [docker-compose.yml](`docker-compose.yml`) file to mount these directories:
-
-        ```yaml
-        services:
+    ```yaml
+    services:
         backend:
             ...
             volumes:
@@ -86,27 +84,25 @@ This repository proposes a template to set up and build a GPU-accelerated RAG-AP
             - /home/perpetue/rag-template/models/tokenizers:/app/tokenizers  # Mount the tokenizers directory
             - /home/perpetue/rag-template/rag-uploads:/app/rag-uploads  # Mount the uploads directory
             ...
-        ```
-        Replace `/home/perpetue/rag-template` with the path where you created the directories.
+    ```
+    Replace `/home/perpetue/rag-template` with the path where you created the directories.
 
     ### 3. Update `.devcontainer/devcontainer.json`
+    If you are using VSCode for development, you need to mount these paths in the [.devcontainer/devcontainer.json](`devcontainer.json`) file:
 
-        If you are using VSCode for development, you need to mount these paths in the [.devcontainer/devcontainer.json](`devcontainer.json`) file:
-
-        ```json
-            ...
-            "mounts": [
-                    "source=/home/perpetue/rag-template/models/models,target=/app/models,type=bind,consistency=cached",
-                    "source=/home/perpetue/rag-template/models/tokenizers,target=/app/tokenizers,type=bind,consistency=cached",
-                    "source=/home/perpetue/rag-template/rag-uploads,target=/app/rag-uploads,type=bind,consistency=cached"
-                ],
-            ...
-        ```
-        Replace `/home/perpetue/rag-template` with the path where you created the directories.
+    ```json
+        ...
+        "mounts": [
+                "source=/home/perpetue/rag-template/models/models,target=/app/models,type=bind,consistency=cached",
+                "source=/home/perpetue/rag-template/models/tokenizers,target=/app/tokenizers,type=bind,consistency=cached",
+                "source=/home/perpetue/rag-template/rag-uploads,target=/app/rag-uploads,type=bind,consistency=cached"
+            ],
+        ...
+    ```
+    Replace `/home/perpetue/rag-template` with the path where you created the directories.
 
     ### 4. Download Pre-trained Models
-
-        Use the [models_loader.ipynb](models_loader.ipynb) notebook to download the pre-trained models you want to use. Open the notebook in Jupyter Notebook or JupyterLab and follow the instructions to download the necessary models. You can put your huggingface token and openai keys in an `.env` file in the projekt root folder, according to the sample in [.env.sample](`.env.sample`). 
+    Use the [models_loader.ipynb](models_loader.ipynb) notebook to download the pre-trained models you want to use. Open the notebook in Jupyter Notebook or JupyterLab and follow the instructions to download the necessary models. You can put your huggingface token and openai keys in an `.env` file in the projekt root folder, according to the sample in [.env.sample](`.env.sample`). 
 
 2. Navigate to the project directory:
     ```sh
