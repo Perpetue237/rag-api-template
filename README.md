@@ -15,7 +15,6 @@ This repository proposes a template to set up and build a GPU-accelerated RAG-AP
 |   |-- Dockerfile
 |   |-- README.md
 |   |-- index.html
-|   |-- node_modules
 |   |-- package-lock.json
 |   |-- package.json
 |   |-- public
@@ -24,6 +23,8 @@ This repository proposes a template to set up and build a GPU-accelerated RAG-AP
 |   |-- tsconfig.json
 |   |-- tsconfig.node.json
 |   `-- vite.config.ts
+|-- install-docker.sh
+|-- install-nvidia-container-toolkit.sh
 |-- models_loader.ipynb
 `-- nginx
     `-- nginx.conf
@@ -106,7 +107,7 @@ This repository proposes a template to set up and build a GPU-accelerated RAG-AP
     ### 4. Download Pre-trained Models
 
         Use the [models_loader.ipynb](models_loader.ipynb) notebook to download the pre-trained models you want to use. Open the notebook in Jupyter Notebook or JupyterLab and follow the instructions to download the necessary models. You can put your huggingface token and openai keys in an `.env` file in the projekt root folder, according to the sample in [.env.sample](`.env.sample`). 
-        
+
 2. Navigate to the project directory:
     ```sh
     cd rag-api-template
