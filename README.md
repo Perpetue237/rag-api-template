@@ -29,11 +29,18 @@ This repository proposes a template to set up and build a GPU-accelerated RAG-AP
     `-- nginx.conf
 ```
 
+## Requirements
+
+- Operating System: Windows, macOS, Linux
+- Minimum Disk Space: 10GB
+- Minimum Memory: 4GB RAM
+- GPU Characteristics: NVIDIA RTX A2000 GPU with 4096MiB total memory
+
 ## Dependencies (tested on UBUNTU 22.04) 
 
 - NVIDIA drivers
 
-- Docker:
+- Docker Desktop:
     ```sh
         sudo bash install-docker.sh
     ```
@@ -43,12 +50,6 @@ This repository proposes a template to set up and build a GPU-accelerated RAG-AP
         sudo bash install-nvidia-container-toolkit.sh
     ```
 
-## Requirements
-
-- Operating System: Windows, macOS, Linux
-- Minimum Disk Space: 10GB
-- Minimum Memory: 4GB RAM
-- GPU Characteristics: NVIDIA RTX A2000 GPU with 4096MiB total memory
 
 
 

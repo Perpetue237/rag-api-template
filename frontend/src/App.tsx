@@ -117,7 +117,7 @@ function App() {
       <div className="card">
         <input type="file" onChange={handleFileChange} />
         <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
+          Edit <code>frontend/src/App.tsx</code> and <code>backend/app/main.py</code> to customize.
         </p>
       </div>
       <div className="question-form">
@@ -163,12 +163,18 @@ function App() {
       </div>
 
       <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
+        Click on the Vite and React logos to learn more.
       </p>
       <footer className="footer">
-        <p>&copy; {new Date().getFullYear()} <a href="https://www.linkedin.com/in/perpetue-k-375306185" target="_blank">
-          Perpetue Kuete Tiayo
-        </a>. All Rights Reserved.</p>
+        <p>&copy; {new Date().getFullYear()}  {' '}
+          <a href="https://hessian.ai/de/personen/perpetue-kuete-tiayo/" target="_blank">
+             Perpetue Kuete Tiayo.
+          </a> All Rights Reserved.</p> 
+        <p>Let's connect on  {' '}
+          <a href="https://www.linkedin.com/in/perpetue-k-375306185" target="_blank">
+            LinkedIn
+          </a>. 
+        </p>
       </footer>
     </div>
   );
