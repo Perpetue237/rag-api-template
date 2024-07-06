@@ -40,17 +40,6 @@ This repository proposes a template to set up and build a GPU-accelerated RAG-AP
 ## Dependencies (tested on UBUNTU 22.04) 
 
 - NVIDIA drivers
-
-- Docker Desktop:
-    ```sh
-        sudo bash install-docker.sh
-    ```
-
-- NVIDIA Container Toolkit:
-    ```sh
-        sudo bash install-nvidia-container-toolkit.sh
-    ```
-
 - Visual Studio Code (optional, for development)
 - Jupyter Notebook (for downloading pre-trained models)
 
@@ -63,7 +52,24 @@ This repository proposes a template to set up and build a GPU-accelerated RAG-AP
 
     After cloning the repository, follow these steps to set up the project:
 
-    ### 1. Create Directories
+    ### 1. Install Docker and nvidia-container-toolkit.sh
+    Navigate to the project directory:
+    ```sh
+    cd rag-api-template
+    ```
+    
+    - Docker Desktop:
+        ```sh
+            sudo bash install-docker.sh
+        ```
+
+    - NVIDIA Container Toolkit:
+        ```sh
+            sudo bash install nvidia-container-toolkit.sh
+        ```
+
+
+    ### 2. Create Directories
     Create directories to store the models, tokenizers, and data. You can create these directories anywhere on your file system. Here is an example of how to create them in the project's root directory:
 
     ```sh
@@ -72,7 +78,7 @@ This repository proposes a template to set up and build a GPU-accelerated RAG-AP
     mkdir -p ~/rag-template/rag-uploads
     ```
 
-    ### 2. Update `docker-compose.yml`
+    ### 3. Update `docker-compose.yml`
     Modify the [docker-compose.yml](`docker-compose.yml`) file to mount these directories:
 
     ```yaml
@@ -87,7 +93,7 @@ This repository proposes a template to set up and build a GPU-accelerated RAG-AP
     ```
     Replace `/home/perpetue/rag-template` with the path where you created the directories.
 
-    ### 3. Update `.devcontainer/devcontainer.json`
+    ### 4. Update `.devcontainer/devcontainer.json`
     If you are using VSCode for development, you need to mount these paths in the [.devcontainer/devcontainer.json](`devcontainer.json`) file:
 
     ```json
@@ -101,7 +107,7 @@ This repository proposes a template to set up and build a GPU-accelerated RAG-AP
     ```
     Replace `/home/perpetue/rag-template` with the path where you created the directories.
 
-    ### 4. Download Pre-trained Models
+    ### 5. Download Pre-trained Models
     Use the [models_loader.ipynb](models_loader.ipynb) notebook to download the pre-trained models you want to use. Open the notebook in Jupyter Notebook or JupyterLab and follow the instructions to download the necessary models. You can put your huggingface token and openai keys in an `.env` file in the projekt root folder, according to the sample in [.env.sample](`.env.sample`). 
 
 2. Navigate to the project directory:
