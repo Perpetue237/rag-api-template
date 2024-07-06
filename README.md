@@ -65,7 +65,7 @@ This repository proposes a template to set up and build a GPU-accelerated RAG-AP
 
     - NVIDIA Container Toolkit:
         ```sh
-            sudo bash install nvidia-container-toolkit.sh
+            sudo bash install-nvidia-container-toolkit.sh
         ```
 
 
