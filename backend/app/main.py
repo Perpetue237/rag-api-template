@@ -23,6 +23,10 @@ from pydantic import BaseModel
 from typing import AsyncGenerator
 import logging
 
+from langchain.globals import set_llm_cache
+from langchain_community.cache import InMemoryCache
+set_llm_cache(InMemoryCache())
+
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -32,6 +36,7 @@ logger.setLevel(logging.DEBUG)
 app = FastAPI()
 
 # Define paths for uploads, models, and tokenizers
+cache_dir = "/app/cache"
 app.file_path = None
 app.UPLOAD_DIRECTORY = "/app/rag-uploads"
 app.MODEL_DIRECTORY = "/app/models"
@@ -74,10 +79,10 @@ tokenizer = AutoTokenizer.from_pretrained(tokenizer_path)
 bnb_config = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_compute_dtype=torch.bfloat16)
 
 # Load model with quantization
-model = AutoModelForCausalLM.from_pretrained(model_path, device_map="auto", quantization_config=bnb_config)
+model = AutoModelForCausalLM.from_pretrained(model_path, cache_dir= cache_dir, device_map="auto", quantization_config=bnb_config)
 
 # Set up embeddings
-embeder = HuggingFaceEmbeddings(model_name="intfloat/multilingual-e5-large", cache_folder="/app/cache")
+embeder = HuggingFaceEmbeddings(model_name="intfloat/multilingual-e5-large", cache_folder=cache_dir)
 
 # Set pad token for the tokenizer
 tokenizer.pad_token = tokenizer.eos_token
@@ -165,6 +170,8 @@ async def retrieve_from_path(file_path: str = Query(...), question: str = Query(
             yield json.dumps({"answer": token}) + '\n'
             await asyncio.sleep(0.1)
 
+    gc.collect()
+    torch.cuda.empty_cache()
     # Return streaming response
     return StreamingResponse(answer_generator(), media_type="application/json")
 
