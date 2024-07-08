@@ -53,8 +53,8 @@ This repository proposes a template to set up and build a GPU-accelerated RAG-AP
     After cloning the repository, follow these steps to set up the project:
 
     ### 1. Install Docker and nvidia-container-toolkit.sh
-    
-    > **Note:** The execution of this shell files retarts the notebook.
+
+    > **Note:** The execution of this shell files reboot the notebook. To avoid this you may want to comment the corresponding lines out.
 
     Navigate to the project directory:
     ```sh
