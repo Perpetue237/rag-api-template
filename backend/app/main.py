@@ -140,24 +140,20 @@ async def retrieve_from_path(file_path: str = Query(...), question: str = Query(
         
         # Create a FAISS vector store from the document chunks
         vectorstore = FAISS.from_documents(documents=chunks, embedding=embeder)
-        retriever = vectorstore.as_retriever(search_kwargs={"k": 3})
+        retriever = vectorstore.as_retriever(search_kwargs={"k": 4})
 
         # Define prompt template
-        prompt = ChatPromptTemplate.from_messages([
-                        ("system", """You are a highly knowledgeable AI assistant specialized in answering questions based on given context. Your task is to provide accurate, concise, and relevant answers. Follow these guidelines:
+        prompt = ChatPromptTemplate.from_template(
+            """System: You are a highly knowledgeable AI assistant specialized in answering questions based on given context. Your task is to provide accurate, concise, and relevant answers. 
 
-                    1. Carefully analyze the provided context.
-                    2. Focus on answering the specific question asked.
-                    3. If the answer is directly stated in the context, provide it concisely.
-                    4. If the answer requires inference, explain your reasoning briefly.
-                    5. If the context doesn't contain enough information to answer the question, state that clearly.
-                    6. Always maintain a professional and helpful tone.
+            Question: {question}
 
-                    Remember, accuracy is crucial. Do not invent information not present in the context."""),
-                        ("human", "Context: {context}\n\nQuestion: {question}"),
-                        ("ai", "I understand. I'll analyze the context and answer the question based on the information provided."),
-                        ("human", "Great, please provide your answer now."),
-                    ])
+            Context: {context}
+
+            Answer:
+
+            """
+        )
 
         
         # Define RAG chain from documents
@@ -174,7 +170,7 @@ async def retrieve_from_path(file_path: str = Query(...), question: str = Query(
         ).assign(answer=rag_chain_from_docs)
         
         # Invoke the RAG chain with the question
-        result = rag_chain.invoke(question)
+        result = await rag_chain.invoke(question)
 
         # Extract relevant context
         relevant_context = result.get('context', [])
@@ -182,6 +178,7 @@ async def retrieve_from_path(file_path: str = Query(...), question: str = Query(
 
         # Yield formatted context
         yield json.dumps({"context": formated_context}) + '\n'
+        logger.info(result["answer"])
         
         # Yield answer tokens one by one with a delay
         for token in result["answer"].split():
