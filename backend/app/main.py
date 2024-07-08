@@ -1,12 +1,6 @@
 import torch, gc
-gc.collect()
-torch.cuda.empty_cache()
-
-# Import necessary modules
-import os, json, requests
-import dotenv, asyncio
+import os, json, requests, dotenv, asyncio
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig, pipeline, GenerationConfig
-import torch
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from langchain_community.document_loaders import PyPDFLoader
@@ -170,8 +164,10 @@ async def retrieve_from_path(file_path: str = Query(...), question: str = Query(
             yield json.dumps({"answer": token}) + '\n'
             await asyncio.sleep(0.1)
 
+    # Clear GPU cache
     gc.collect()
     torch.cuda.empty_cache()
+    
     # Return streaming response
     return StreamingResponse(answer_generator(), media_type="application/json")
 

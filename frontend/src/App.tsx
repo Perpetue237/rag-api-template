@@ -12,17 +12,19 @@ function App() {
   const [answer, setAnswer] = useState<string>('');
   const [expandedContextIndex, setExpandedContextIndex] = useState<number | null>(null);
 
+  // Handle input change for the question
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setInputQuestion(e.target.value);
   };
 
+  // Handle file change and upload the selected file
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const selectedFile = e.target.files[0];
       setFile(selectedFile);
-      console.log(file)
+      console.log(file);
 
-      // Directly handle the file upload
+      // Create form data and append the selected file
       const formData = new FormData();
       formData.append('file', selectedFile);
 
@@ -45,6 +47,7 @@ function App() {
     }
   };
 
+  // Handle question submission
   const handleQuestionSubmit = async () => {
     if (!filePath) {
       alert("Please upload a file first.");
@@ -66,39 +69,43 @@ function App() {
       if (retrieveResponse.ok) {
         const reader = retrieveResponse.body?.getReader();
         const decoder = new TextDecoder();
-        let result = '';
+        let buffer = '';
 
         while (true) {
           const { done, value } = await reader?.read() || {};
           if (done) break;
-          result += decoder.decode(value);
+          buffer += decoder.decode(value, { stream: true });
 
-          // Parsing the streamed JSON data
-          result.trim().split('\n').forEach((line) => {
-            try {
-              const data = JSON.parse(line);
-              if (data.context) {
-                setContext(data.context);
+          let boundary = buffer.indexOf('\n');
+          while (boundary !== -1) {
+            const line = buffer.substring(0, boundary).trim();
+            buffer = buffer.substring(boundary + 1);
+
+            if (line) {
+              try {
+                const data = JSON.parse(line);
+                if (data.context) {
+                  setContext(data.context);
+                }
+                if (data.answer) {
+                  setAnswer(prev => (prev ? `${prev} ${data.answer}` : data.answer));
+                }
+              } catch (e) {
+                console.error('Error parsing streamed data:', e);
               }
-              if (data.answer) {
-                setAnswer(prev => prev + ' ' + data.answer);
-              }
-            } catch (e) {
-              console.error('Error parsing streamed data:', e);
             }
-          });
+            boundary = buffer.indexOf('\n');
+          }
         }
       } else {
         console.error('Failed to retrieve:', retrieveResponse.statusText);
       }
-
-      // Clear the question input field after submission
-      setInputQuestion('');
     } catch (error) {
       console.error('Error retrieving answer:', error);
     }
   };
 
+  // Toggle context display
   const toggleContext = (index: number) => {
     setExpandedContextIndex(expandedContextIndex === index ? null : index);
   };
