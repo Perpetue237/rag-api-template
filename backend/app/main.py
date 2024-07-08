@@ -59,7 +59,8 @@ class QueryRequest(BaseModel):
 
 # Function to format documents
 def format_docs(docs):
-    return " ".join([doc.page_content.replace('\n', ' ') for doc in docs])
+    formatted = "\n\n".join([f"Document {i+1}:\n{doc.page_content}" for i, doc in enumerate(docs)])
+    return formatted
 
 # Define model and tokenizer paths
 model_name = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
@@ -70,7 +71,12 @@ tokenizer_path = os.path.join(app.TOKENIZER_DIRECTORY, model_name)
 tokenizer = AutoTokenizer.from_pretrained(tokenizer_path)
 
 # Set up quantization configuration
-bnb_config = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_compute_dtype=torch.bfloat16)
+bnb_config = BitsAndBytesConfig(
+    load_in_8bit=True,
+    bnb_8bit_use_double_quant=True,
+    bnb_8bit_quant_type="nf4",
+    bnb_8bit_compute_dtype=torch.float16
+)
 
 # Load model with quantization
 model = AutoModelForCausalLM.from_pretrained(model_path, cache_dir= cache_dir, device_map="auto", quantization_config=bnb_config)
@@ -83,8 +89,13 @@ tokenizer.pad_token = tokenizer.eos_token
 
 # Define generation configuration
 generation_config = GenerationConfig(
-    max_new_tokens=1000,
-    do_sample=True,
+    max_new_tokens=250,  # Adjust based on your needs
+    do_sample=False,
+    num_beams=1,
+    temperature=0.7,  # Adjust for creativity vs consistency
+    top_k=50,
+    top_p=0.95,
+    repetition_penalty=1.2,
     bos_token_id=tokenizer.bos_token_id,
     eos_token_id=tokenizer.eos_token_id,
     pad_token_id=tokenizer.eos_token_id
@@ -129,12 +140,25 @@ async def retrieve_from_path(file_path: str = Query(...), question: str = Query(
         
         # Create a FAISS vector store from the document chunks
         vectorstore = FAISS.from_documents(documents=chunks, embedding=embeder)
-        retriever = vectorstore.as_retriever()
+        retriever = vectorstore.as_retriever(search_kwargs={"k": 3})
 
         # Define prompt template
-        prompt = ChatPromptTemplate.from_template(
-            template="Given the context: {context}, and the question: {question}, provide a short answer."
-        )
+        prompt = ChatPromptTemplate.from_messages([
+                        ("system", """You are a highly knowledgeable AI assistant specialized in answering questions based on given context. Your task is to provide accurate, concise, and relevant answers. Follow these guidelines:
+
+                    1. Carefully analyze the provided context.
+                    2. Focus on answering the specific question asked.
+                    3. If the answer is directly stated in the context, provide it concisely.
+                    4. If the answer requires inference, explain your reasoning briefly.
+                    5. If the context doesn't contain enough information to answer the question, state that clearly.
+                    6. Always maintain a professional and helpful tone.
+
+                    Remember, accuracy is crucial. Do not invent information not present in the context."""),
+                        ("human", "Context: {context}\n\nQuestion: {question}"),
+                        ("ai", "I understand. I'll analyze the context and answer the question based on the information provided."),
+                        ("human", "Great, please provide your answer now."),
+                    ])
+
         
         # Define RAG chain from documents
         rag_chain_from_docs = (
