@@ -26,6 +26,10 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
+
+gc.collect()
+torch.cuda.empty_cache()
+    
 # Initialize FastAPI app
 app = FastAPI()
 
@@ -64,6 +68,7 @@ def format_docs(docs):
 
 # Define model and tokenizer paths
 model_name = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
+# model_name = "microsoft/DialoGPT-medium"
 model_path = os.path.join(app.MODEL_DIRECTORY, model_name)
 tokenizer_path = os.path.join(app.TOKENIZER_DIRECTORY, model_name)
 
@@ -144,33 +149,32 @@ async def retrieve_from_path(file_path: str = Query(...), question: str = Query(
 
         # Define prompt template
         prompt = ChatPromptTemplate.from_template(
-            """System: You are a highly knowledgeable AI assistant specialized in answering questions based on given context. Your task is to provide accurate, concise, and relevant answers. 
-
-            Question: {question}
-
-            Context: {context}
-
-            Answer:
-
             """
+                You are an assistant designed to help with question-answering tasks. Use the following pieces of retrieved context to provide a concise and accurate answer to the question. Keep your response to a maximum of ten sentences.
+
+                Question: {question}
+
+                Context: {context}
+
+                Answer:
+                """
+
         )
 
         
-        # Define RAG chain from documents
+
         rag_chain_from_docs = (
-            RunnablePassthrough.assign(context=RunnablePick("context") | format_docs)
-            | prompt
-            | hf_pipe
-            | StrOutputParser()
-        )
+                RunnablePassthrough.assign(context=(lambda x: format_docs(x["context"])))
+                | prompt
+                | hf_pipe
+                | StrOutputParser()
+            )
 
-        # Define the main RAG chain
         rag_chain = RunnableParallel(
-            {"context": retriever, "question": RunnablePassthrough()}
-        ).assign(answer=rag_chain_from_docs)
-        
-        # Invoke the RAG chain with the question
-        result = await rag_chain.invoke(question)
+                {"context": retriever, "question": RunnablePassthrough()}
+            ).assign(answer=rag_chain_from_docs)
+        result = rag_chain.invoke(question)
+
 
         # Extract relevant context
         relevant_context = result.get('context', [])
