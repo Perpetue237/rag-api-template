@@ -129,8 +129,8 @@ Use the [models_loader.ipynb](models_loader.ipynb) notebook to download the pre-
 Once the API is successfully built, you can visit it at [http://localhost/](http://localhost/). You should see the following frontend:
 
 <div style="display: flex; justify-content: space-between; align-items: center;">
-    <img src="homepage.png" alt="Homepage" style="height: 300px; width: auto; margin-right: 10px; object-fit: cover;">
-    <img src="screenwithpromt.png" alt="Prompt" style="height: 300px; width: auto; object-fit: cover;">
+    <img src="homepage.png" alt="Homepage" style="height: 200px; width: 300px; margin-right: 5px; object-fit: cover;">
+    <img src="screenwithpromt.png" alt="Prompt" style="height: 200px; width: 300px; object-fit: cover;">
 </div>
 
 Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
