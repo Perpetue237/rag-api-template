@@ -1,3 +1,6 @@
+from datetime import datetime
+start = datetime.now()
+
 import torch, gc
 import os, json, requests, dotenv, asyncio
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig, pipeline, GenerationConfig
@@ -67,8 +70,13 @@ def format_docs(docs):
     return formatted
 
 # Define model and tokenizer paths
-model_name = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
+# model_name = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
 # model_name = "microsoft/DialoGPT-medium"
+# model_name = "unsloth/tinyllama-chat-bnb-4bit"
+#model_name = "mistralai/Mistral-7B-Instruct-v0.2"
+#model_name = "mistralai/Mistral-7B-Instruct-v0.3"
+
+model_name = "microsoft/phi-2"
 model_path = os.path.join(app.MODEL_DIRECTORY, model_name)
 tokenizer_path = os.path.join(app.TOKENIZER_DIRECTORY, model_name)
 
@@ -94,7 +102,7 @@ tokenizer.pad_token = tokenizer.eos_token
 
 # Define generation configuration
 generation_config = GenerationConfig(
-    max_new_tokens=250,  # Adjust based on your needs
+    max_new_tokens=500,  # Adjust based on your needs
     do_sample=False,
     num_beams=1,
     temperature=0.7,  # Adjust for creativity vs consistency
@@ -117,6 +125,12 @@ pipe = pipeline(
 # Set up HuggingFace pipeline
 hf_pipe = HuggingFacePipeline(pipeline=pipe, model_kwargs={"generation_config": generation_config})
 
+
+end = datetime.now()
+
+total_time = end - start
+
+logger.info(f"Stet up time: {total_time}")
 # Endpoint to upload a file
 @app.post("/upload")
 async def upload_file(file: UploadFile = File(...)):
