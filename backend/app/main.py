@@ -72,11 +72,11 @@ def format_docs(docs):
 # Define model and tokenizer paths
 # model_name = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
 # model_name = "microsoft/DialoGPT-medium"
-# model_name = "unsloth/tinyllama-chat-bnb-4bit"
 #model_name = "mistralai/Mistral-7B-Instruct-v0.2"
 #model_name = "mistralai/Mistral-7B-Instruct-v0.3"
+#model_name = "microsoft/phi-2"
 
-model_name = "microsoft/phi-2"
+model_name = "unsloth/tinyllama-chat-bnb-4bit"
 model_path = os.path.join(app.MODEL_DIRECTORY, model_name)
 tokenizer_path = os.path.join(app.TOKENIZER_DIRECTORY, model_name)
 
