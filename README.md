@@ -1,4 +1,4 @@
-# rag-api-template
+# Retrieval-Augmented Generation (RAG) API Template with Frontend and Backend
 This repository proposes a template to set up and build a GPU-accelerated RAG-API with Docker Compose.
 
 ## Project Structure
