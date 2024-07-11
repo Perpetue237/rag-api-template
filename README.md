@@ -126,11 +126,12 @@ Use the [models_loader.ipynb](models_loader.ipynb) notebook to download the pre-
     docker-compose up --build -d
     ```
 ### 4. Visit the API
-Once the API is successfully built, you can visit it at http://localhost/. You should see the following frontend:
-![Homepage](homepage.png)
+Once the API is successfully built, you can visit it at [http://localhost/](http://localhost/). You should see the following frontend:
 
-    
-## Contributing
+<div style="display: flex; justify-content: space-between;">
+    <img src="homepage.png" alt="Homepage" style="width: 45%; margin-right: 10px;">
+    <img src="screenwithpromt.png" alt="Prompt" style="width: 45%;">
+</div>
 
 Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
