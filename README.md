@@ -123,6 +123,7 @@ Use the [models_loader.ipynb](models_loader.ipynb) notebook to download the pre-
     ```sh
     docker compose down
     docker volume prune
+    docker system prune
     docker-compose up --build -d
     ```
 ### 4. Visit the API
