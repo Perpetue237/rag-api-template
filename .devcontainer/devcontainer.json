@@ -24,7 +24,8 @@
 				"kylebarron.vscode-jupyter-python",
 				"e-editiones.tei-publisher-vscode",
 				"redhat.vscode-xml",
-				"jock.svg"
+				"jock.svg",
+				"yzhang.markdown-all-in-one"
 			]
 	}
 	},
@@ -37,5 +38,5 @@
 		"source=/home/perpetue/rag-template/models/tokenizers,target=/app/tokenizers,type=bind,consistency=cached",
 		"source=/home/perpetue/rag-template/rag-uploads,target=/app/rag-uploads,type=bind,consistency=cached" 
 	],
-	"postStartCommand": "cd frontend && npm install"
+	"postStartCommand": " git config --global --add safe.directory /workspaces/rag-api-template && cd frontend && npm install"
 }

@@ -176,6 +176,7 @@ async def retrieve_from_path(file_path: str = Query(...), question: str = Query(
         prompt = ChatPromptTemplate.from_template(
             """<|system|>
                 You are an assistant designed to help with question-answering tasks. Use the following pieces of retrieved context to provide a concise and accurate answer to the question. Keep your response to a maximum of ten sentences.
+                If you don't know the answer, just say "I do not know." Don't make up an answer.
 
                 Context: {context}
 

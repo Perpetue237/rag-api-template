@@ -1,5 +1,21 @@
 # Retrieval-Augmented Generation (RAG) API Template with Frontend and Backend
-This repository proposes a template to set up and build a GPU-accelerated RAG-API with Docker Compose.
+This repository proposes a template to set up and build a GPU-accelerated RAG-API FastAPI and HuggingFace Transformers.
+
+- [Retrieval-Augmented Generation (RAG) API Template with Frontend and Backend](#retrieval-augmented-generation-rag-api-template-with-frontend-and-backend)
+  - [Project Structure](#project-structure)
+  - [Features](#features)
+  - [Requirements](#requirements)
+  - [Dependencies (tested on UBUNTU 22.04)](#dependencies-tested-on-ubuntu-2204)
+  - [Installation](#installation)
+    - [1. Clone the repo:](#1-clone-the-repo)
+    - [2. Navigate to the project directory:](#2-navigate-to-the-project-directory)
+    - [3. Sart the API:](#3-sart-the-api)
+    - [4. Visit the API](#4-visit-the-api)
+  - [Docker Compose Overview](#docker-compose-overview)
+    - [Services](#services)
+  - [Contributions](#contributions)
+  - [License](#license)
+  - [Contact](#contact)
 
 ## Project Structure
 
@@ -29,6 +45,19 @@ This repository proposes a template to set up and build a GPU-accelerated RAG-AP
 `-- nginx
     `-- nginx.conf
 ```
+## Features
+
+- **File Upload:** Easily upload PDF files to the server.
+- **Document Loading:** Load and process documents using the PyPDFLoader.
+- **Text Splitting:** Split documents into manageable chunks using the CharacterTextSplitter.
+- **Vector Store:** Create a FAISS vector store from document chunks for efficient retrieval.
+- **Embeddings:** Use HuggingFace embeddings to transform text data.
+- **Text Generation:** Generate answers to questions using a pre-trained language model.
+- **Asynchronous Streaming:** Stream responses asynchronously for efficient and responsive querying.
+- **Customizable Pipeline:** Easily customize the text generation pipeline with quantization and other settings.
+- **CORS Support:** Full CORS support for cross-origin requests.
+- **Logging:** Detailed logging for monitoring and debugging.
+- **Memory Management:** Efficient GPU memory management with garbage collection.
 
 ## Requirements
 
@@ -134,6 +163,35 @@ Once the API is successfully built, you can visit it at [http://localhost/](http
     <img src="screenwithpromt.png" alt="Prompt" style="height: 200px; width: 300px; object-fit: cover;">
 </div>
 
+## Docker Compose Overview
+
+This [Docker Compose file](docker-compose.yml) sets up a multi-container application with three services: `frontend`, `backend`, and `nginx`.
+
+### Services
+
+- **Frontend Service**
+  - **Build Context**: `./frontend`
+  - **Port**: 80
+  - **Network**: `app-network`
+
+- **Backend Service**
+  - **Build Context**: `./backend`
+  - **Port**: 8000
+  - **Network**: `app-network`
+  - **Volumes**: Mounts local directories for models and uploads
+  - **GPU Configuration**: Configured to use NVIDIA GPUs
+
+- **Nginx Service**
+  - **Image**: `nginx:latest`
+  - **Port**: 8081
+  - **Configuration**: Uses a custom Nginx configuration file
+  - **Dependencies**: Depends on `frontend` and `backend`
+  - **Network**: `app-network`
+
+
+Docker Compose builds, configures, and runs the specified services in isolated containers. Services can communicate over the defined `app-network`, ensuring connectivity and proper resource allocation.
+
+## Contributions
 Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
 1. Fork the Project
