@@ -11,8 +11,9 @@ This repository proposes a template to set up and build a GPU-accelerated RAG-AP
     - [2. Navigate to the project directory:](#2-navigate-to-the-project-directory)
     - [3. Sart the API:](#3-sart-the-api)
     - [4. Visit the API](#4-visit-the-api)
-  - [Docker Compose Overview](#docker-compose-overview)
-    - [Services](#services)
+  - [Deployment](#deployment)
+    - [Services with Docker Compose](#services-with-docker-compose)
+    - [Nginx Configuration Overview](#nginx-configuration-overview)
   - [Contributions](#contributions)
   - [License](#license)
   - [Contact](#contact)
@@ -48,7 +49,7 @@ This repository proposes a template to set up and build a GPU-accelerated RAG-AP
 ## Features
 
 - **File Upload:** Easily upload PDF files to the server.
-- **Document Loading:** Load and process documents using the PyPDFLoader.
+- **Document Loading:** Load and process documents using the langchain PyPDFLoader.
 - **Text Splitting:** Split documents into manageable chunks using the CharacterTextSplitter.
 - **Vector Store:** Create a FAISS vector store from document chunks for efficient retrieval.
 - **Embeddings:** Use HuggingFace embeddings to transform text data.
@@ -163,11 +164,11 @@ Once the API is successfully built, you can visit it at [http://localhost/](http
     <img src="screenwithpromt.png" alt="Prompt" style="height: 200px; width: 300px; object-fit: cover;">
 </div>
 
-## Docker Compose Overview
+## Deployment
 
 This [Docker Compose file](docker-compose.yml) sets up a multi-container application with three services: `frontend`, `backend`, and `nginx`.
 
-### Services
+### Services with Docker Compose
 
 - **Frontend Service**
   - **Build Context**: `./frontend`
@@ -190,6 +191,38 @@ This [Docker Compose file](docker-compose.yml) sets up a multi-container applica
 
 
 Docker Compose builds, configures, and runs the specified services in isolated containers. Services can communicate over the defined `app-network`, ensuring connectivity and proper resource allocation.
+
+### Nginx Configuration Overview
+
+This [Nginx configuration file](nginx/nginx.conf) sets up a basic web server with proxying capabilities and custom error handling.
+
+- **Worker Processes**
+  - `worker_processes 1;` - Uses one worker process.
+
+- **Events**
+  - `worker_connections 1024;` - Allows up to 1024 connections per worker.
+
+- **HTTP Server**
+  - **Port**
+    - `listen 80;` - Listens on port 80 for HTTP requests.
+
+  - **Server Name**
+    - `server_name localhost;` - Uses `localhost` as the server name.
+
+  - **Root Path (`/`)**
+    - Serves static files from `/usr/share/nginx/html`.
+    - Defaults to `index.html` and falls back to it for single-page applications.
+
+  - **Proxy Endpoints**
+    - **/upload**
+      - Forwards requests to `http://backend:8000/upload`.
+      - Includes CORS headers for cross-origin requests.
+    - **/retrieve_from_path**
+      - Forwards requests to `http://backend:8000/retrieve_from_path`.
+      - Includes CORS headers.
+
+  - **Error Handling**
+    - `error_page 500 502 503 504 /50x.html;` - Custom error page for server errors.
 
 ## Contributions
 Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
