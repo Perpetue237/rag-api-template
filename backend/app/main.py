@@ -20,9 +20,9 @@ from pydantic import BaseModel
 from typing import AsyncGenerator
 import logging
 
-from langchain.globals import set_llm_cache
-from langchain_community.cache import InMemoryCache
-set_llm_cache(InMemoryCache())
+#from langchain.globals import set_llm_cache
+#from langchain_community.cache import InMemoryCache
+#set_llm_cache(InMemoryCache())
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -99,13 +99,18 @@ embeder = HuggingFaceEmbeddings(model_name="intfloat/multilingual-e5-large", cac
 
 # Set pad token for the tokenizer
 tokenizer.pad_token = tokenizer.eos_token
+terminators = [
+                        tokenizer.eos_token_id,
+                        tokenizer.convert_tokens_to_ids("<|eot_id|>")
+                    ]
+
 
 # Define generation configuration
 generation_config = GenerationConfig(
     max_new_tokens=1000,  # Adjust based on your needs
     do_sample=False,
     num_beams=1,
-    temperature=0.7,  # Adjust for creativity vs consistency
+    temperature=0.4,  # Adjust for creativity vs consistency
     top_k=50,
     top_p=0.95,
     repetition_penalty=1.2,
@@ -116,11 +121,16 @@ generation_config = GenerationConfig(
 
 # Set up text generation pipeline
 pipe = pipeline(
-    "text-generation", 
     model=model,
     tokenizer=tokenizer,
+    task="text-generation",
+    temperature=0.2,
+    do_sample=True,
+    repetition_penalty=1.1,
     return_full_text=False,
-    max_new_tokens=128
+    max_new_tokens=1000,
+    eos_token_id=terminators,
+
 )
 
 # Set up HuggingFace pipeline
