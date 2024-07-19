@@ -102,7 +102,7 @@ tokenizer.pad_token = tokenizer.eos_token
 
 # Define generation configuration
 generation_config = GenerationConfig(
-    max_new_tokens=500,  # Adjust based on your needs
+    max_new_tokens=1000,  # Adjust based on your needs
     do_sample=False,
     num_beams=1,
     temperature=0.7,  # Adjust for creativity vs consistency
@@ -164,13 +164,15 @@ async def retrieve_from_path(file_path: str = Query(...), question: str = Query(
 
         # Define prompt template
         prompt = ChatPromptTemplate.from_template(
-            """
+            """<|system|>
                 You are an assistant designed to help with question-answering tasks. Use the following pieces of retrieved context to provide a concise and accurate answer to the question. Keep your response to a maximum of ten sentences.
-
-                Question: {question}
 
                 Context: {context}
 
+                <|user|>
+                Question: {question}
+
+                <|assistant|>
                 Answer (without repeating the labels or unnecessary text):
                 """
 
