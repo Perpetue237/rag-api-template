@@ -2,7 +2,7 @@ from datetime import datetime
 start = datetime.now()
 
 import torch, gc
-import os, json, requests, dotenv, asyncio
+import os, json, asyncio, re
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig, pipeline, GenerationConfig
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
@@ -68,6 +68,13 @@ class QueryRequest(BaseModel):
 def format_docs(docs):
     formatted = "\n\n".join([f"Document {i+1}:\n{doc.page_content}" for i, doc in enumerate(docs)])
     return formatted
+
+
+def tokenize_and_format(text):
+    text = text.replace('\n\n', '<br/><br/>').replace('\n', '<br/>').replace(' ', '&nbsp;')
+    tokens = re.findall(r'(<br\/><br\/>|<br\/>|&nbsp;|[^&<>]+)', text)
+    
+    return tokens
 
 # Define model and tokenizer paths
 # model_name = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
@@ -204,19 +211,23 @@ async def retrieve_from_path(file_path: str = Query(...), question: str = Query(
         result = rag_chain.invoke(question)
 
 
-        # Extract relevant context
         relevant_context = result.get('context', [])
-        formated_context = [element.page_content.replace('\n', ' ') for element in relevant_context]
+        formatted_context = []
 
-        # Yield formatted context
-        yield json.dumps({"context": formated_context}) + '\n'
-        logger.info(result["answer"])
+        for element in relevant_context:
+            context_tokens = tokenize_and_format(element.page_content)
+            formatted_element = ''.join(context_tokens)
+            formatted_context.append(formatted_element)
+            
+        yield json.dumps({"context": formatted_context})+ '\n'
+
+        text = result["answer"]
+
+        tokens = tokenize_and_format(text)
         
-        # Yield answer tokens one by one with a delay
-        for token in result["answer"].split():
+        for token in tokens:
             yield json.dumps({"answer": token}) + '\n'
-            await asyncio.sleep(0.1)
-
+            await asyncio.sleep(0.05)  # Adjust the sleep time as needed
     # Clear GPU cache
     gc.collect()
     torch.cuda.empty_cache()

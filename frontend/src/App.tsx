@@ -149,7 +149,7 @@ function App() {
             </div>
             {expandedContextIndex !== null && (
               <div className="context-content">
-                <p>{context[expandedContextIndex]}</p>
+                <p dangerouslySetInnerHTML={{ __html:context[expandedContextIndex]}}/>
               </div>
             )}
           </div>
@@ -157,7 +157,7 @@ function App() {
         {answer && (
           <div className="answer-box">
             <h2>Answer:</h2>
-            <p>{answer}</p>
+            <p dangerouslySetInnerHTML={{ __html: answer }} />
           </div>
         )}
         <input
