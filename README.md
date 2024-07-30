@@ -11,6 +11,7 @@ This repository proposes a template to set up and build a GPU-accelerated RAG-AP
     - [2. Navigate to the project directory:](#2-navigate-to-the-project-directory)
     - [3. Sart the API:](#3-sart-the-api)
     - [4. Visit the API](#4-visit-the-api)
+    - [5. Stop the Aplication and Clean the System](#5-stop-the-aplication-and-clean-the-system)
   - [Deployment](#deployment)
     - [Services with Docker Compose](#services-with-docker-compose)
     - [Nginx Configuration Overview](#nginx-configuration-overview)
@@ -163,6 +164,14 @@ Once the API is successfully built, you can visit it at [http://localhost/](http
     <img src="homepage.png" alt="Homepage" style="height: 200px; width: 300px; margin-right: 5px; object-fit: cover;">
     <img src="screenwithpromt.png" alt="Prompt" style="height: 200px; width: 300px; object-fit: cover;">
 </div>
+
+### 5. Stop the Aplication and Clean the System
+
+```sh
+docker-compose down
+docker system prune
+docker volume prune
+```
 
 ## Deployment
 
