@@ -2,7 +2,7 @@ torch==2.0.1
 pandas
 lxml
 crewai[tools]
-pyautogen[retrievechat]
+ag2[retrievechat]
 unstructured[all-docs]
 langchain 
 langchain-cli
